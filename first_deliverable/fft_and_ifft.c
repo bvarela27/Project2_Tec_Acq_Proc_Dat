@@ -1,8 +1,4 @@
-/* Factored discrete Fourier transform, or FFT, and its inverse iFFT */
-
 #include "fft_and_ifft.h"
-
-#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
