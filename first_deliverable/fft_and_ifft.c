@@ -57,7 +57,7 @@ void fft( complex *v, int n, complex *tmp ) {
    [8]   Let v[m] = ve[m] + w*vo[m]
    [9]   Let v[m+N/2] = ve[m] - w*vo[m]
  */
-void ifft( complex *v, int n, complex *tmp ) {
+void _ifft( complex *v, int n, complex *tmp ) {
     if(n>1) {			/* otherwise, do nothing and return */
         int k,m;
         complex z, w, *vo, *ve;
@@ -67,8 +67,8 @@ void ifft( complex *v, int n, complex *tmp ) {
             ve[k] = v[2*k];
             vo[k] = v[2*k+1];
         }
-        ifft( ve, n/2, v );		/* FFT on even-indexed elements of v[] */
-        ifft( vo, n/2, v );		/* FFT on odd-indexed elements of v[] */
+        _ifft( ve, n/2, v );		/* FFT on even-indexed elements of v[] */
+        _ifft( vo, n/2, v );		/* FFT on odd-indexed elements of v[] */
         for(m=0; m<n/2; m++) {
             w.Re = cos(2*PI*m/(double)n);
             w.Im = sin(2*PI*m/(double)n);
@@ -82,3 +82,19 @@ void ifft( complex *v, int n, complex *tmp ) {
     }
     return;
 }
+
+void ifft( complex *v, int n, complex *tmp ) {
+    int i;
+
+    _ifft(v, n, tmp);
+
+    // This is needed because the _ifft returns the right
+    // value, but it is mutiplied by n
+    for (i=0; i< n; i++) {
+        v[i].Re = v[i].Re / ((real) n);
+        v[i].Im = v[i].Im / ((real) n);
+    }
+
+    return;
+}
+
