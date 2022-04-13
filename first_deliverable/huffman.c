@@ -1,24 +1,7 @@
-// Huffman Coding in C
-
+#include "huffman.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX_TREE_HT 512
-#define SIZE_CHAR   5
-
-
-struct MinHNode {
-    char item[SIZE_CHAR];
-    unsigned freq;
-    struct MinHNode *left, *right;
-};
-
-struct MinHeap {
-    unsigned size;
-    unsigned capacity;
-    struct MinHNode **array;
-};
 
 // Print the array
 void printArray(int arr[], int n) {
@@ -172,18 +155,4 @@ void HuffmanCodes(char item[][SIZE_CHAR], int freq[], int size) {
     int arr[MAX_TREE_HT], top = 0;
 
     printHCodes(root, arr, top);
-}
-
-int main() {
-    char arr[][SIZE_CHAR] = {"11", "4", "-18", "102", "5", "256", "120", "6", "44", "-240"};
-    int freq[] =            {5,    1,   6,     3,     10,  11,    1,     1,   1,     10};
-
-    int size = sizeof(arr) / sizeof(arr[0]);
-
-    printf("%d\n", size);
-
-    printf(" Char | Huffman code ");
-    printf("\n--------------------\n");
-
-    HuffmanCodes(arr, freq, size);
 }

@@ -1,11 +1,13 @@
 #include "fft_and_ifft.h"
 #include "file_handler.h"
 #include "compress_and_decompress.h"
+#include "dictionary.h"
+#include "huffman.h"
 
-#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 real max_real, min_real, max_im, min_im;
 
@@ -29,9 +31,13 @@ static void print_vector( const char *title, complex *x, int n) {
 
 int main(void) {
     int i, count;
+    char key[6];
+    dict_t dict_coeffs;
     FILE* ptr;
     FILE* ptr_w;
     complex block[N], scratch[N];
+
+    dict_coeffs = dict_new();
 
     count = 0;
     max_real, min_real, max_im, min_im = 0, 0, 0, 0;
@@ -45,6 +51,14 @@ int main(void) {
         fft( block, N, scratch );
         //print_vector(" FFT", block, N);
         quantify_coeff(block, N);
+
+        for(i=0; i<N; i++) {
+            sprintf(key, "%d", (int) block[i].Re);
+            dict_add(dict_coeffs, key, 1);
+            sprintf(key, "%d", (int) block[i].Im);
+            dict_add(dict_coeffs, key, 1);
+        }
+
         dequantify_coeff(block, N);
         ifft( block, N, scratch );
         for(i=0; i<N; i++) {
@@ -55,6 +69,37 @@ int main(void) {
     }
 
     fclose(ptr_w);
+
+    printf("len: %d\n", dict_coeffs->len);
+
+    char keys[dict_coeffs->len][5];
+    int* freqs = calloc(dict_coeffs->len, sizeof(int));
+
+    if (keys == NULL || freqs == NULL) {
+        printf("Unable to allocate memory\n");
+        return -1;
+    }
+
+    for (i=0; i<dict_coeffs->len; i++) {
+        //printf("key: %s, value: %d\n", dict_coeffs->entry[i].key, dict_coeffs->entry[i].value);
+        strcpy(keys[i], dict_coeffs->entry[i].key);
+        freqs[i] = dict_coeffs->entry[i].value;
+    }
+
+    dict_free(dict_coeffs);
+
+    //char arr[][SIZE_CHAR] = {"11", "4", "-18", "102", "5", "256", "120", "6", "44", "-240"};
+    //int freq[] =            {5,    1,   6,     3,     10,  11,    1,     1,   1,     10};
+    //int size = sizeof(arr) / sizeof(arr[0]);
+
+    int size = sizeof(keys) / sizeof(keys[0]);
+
+    printf("%d\n", size);
+
+    printf(" Char | Huffman code ");
+    printf("\n--------------------\n");
+
+    HuffmanCodes(keys, freqs, size);
 
     //printf("max_real: %f, min_real: %f, max_im: %f, min_im: %f\n", max_real, min_real, max_im, min_im);
 
