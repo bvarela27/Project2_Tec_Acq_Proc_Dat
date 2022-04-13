@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Dictionary
-int dict_find_index(dict_t dict, int key) {
+// Dictionary int
+int dict_int_find_index(dict_int_t dict, int key) {
     for (int i = 0; i < dict->len; i++) {
         if (dict->entry[i].key == key) {
             return i;
@@ -13,31 +13,63 @@ int dict_find_index(dict_t dict, int key) {
     return -1;
 }
 
-void dict_add(dict_t dict, int key, int value) {
-   int idx = dict_find_index(dict, key);
+void dict_int_add(dict_int_t dict, int key, int value) {
+   int idx = dict_int_find_index(dict, key);
    if (idx != -1) {
        dict->entry[idx].value += value;
        return;
    }
    if (dict->len == dict->cap) {
        dict->cap *= 2;
-       dict->entry = realloc(dict->entry, dict->cap * sizeof(dict_entry_s));
+       dict->entry = realloc(dict->entry, dict->cap * sizeof(dict_int_entry_s));
    }
    dict->entry[dict->len].key = key;
    dict->entry[dict->len].value = value;
    dict->len++;
 }
 
-dict_t dict_new(void) {
-    dict_s proto = {0, 10, malloc(10 * sizeof(dict_entry_s))};
-    dict_t d = malloc(sizeof(dict_s));
+dict_int_t dict_int_new(void) {
+    dict_int_s proto = {0, 10, malloc(10 * sizeof(dict_int_entry_s))};
+    dict_int_t d = malloc(sizeof(dict_int_s));
     *d = proto;
     return d;
 }
 
-void dict_free(dict_t dict) {
+void dict_int_free(dict_int_t dict) {
     free(dict->entry);
     free(dict);
+}
+
+// Dictionary string
+int dict_string_find_index(dict_string_t dict, const char *key) {
+    for (int i = 0; i < dict->len; i++) {
+        if (!strcmp(dict->entry[i].key, key)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void dict_string_add(dict_string_t dict, const char *key, const char *value) {
+   int idx = dict_string_find_index(dict, key);
+   if (idx != -1) {
+       dict->entry[idx].value = strdup(value);
+       return;
+   }
+   if (dict->len == dict->cap) {
+       dict->cap *= 2;
+       dict->entry = realloc(dict->entry, dict->cap * sizeof(dict_string_entry_s));
+   }
+   dict->entry[dict->len].key = strdup(key);
+   dict->entry[dict->len].value = strdup(value);
+   dict->len++;
+}
+
+dict_string_t dict_string_new(void) {
+    dict_string_s proto = {0, 10, malloc(10 * sizeof(dict_string_entry_s))};
+    dict_string_t d = malloc(sizeof(dict_string_s));
+    *d = proto;
+    return d;
 }
 
 // List

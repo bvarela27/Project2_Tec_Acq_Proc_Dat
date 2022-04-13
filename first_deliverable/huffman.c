@@ -3,15 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Print the array
-void printArray(int arr[], int n) {
-    int i;
-    for (i = 0; i < n; ++i)
-        printf("%d", arr[i]);
-
-    printf("\n");
-}
-
 // Create nodes
 struct MinHNode *newNode(char item[SIZE_CHAR], unsigned freq) {
     struct MinHNode *temp = (struct MinHNode *)malloc(sizeof(struct MinHNode));
@@ -131,28 +122,32 @@ struct MinHNode *buildHuffmanTree(char item[][SIZE_CHAR], int freq[], int size) 
     return extractMin(minHeap);
 }
 
-void printHCodes(struct MinHNode *root, int arr[], int top) {
+void printHCodes(struct MinHNode *root, char arr[], int top, dict_string_t dict_huffman) {
     if (root->left) {
-        arr[top] = 0;
-        printHCodes(root->left, arr, top + 1);
+        arr[top] = '0';
+        printHCodes(root->left, arr, top + 1, dict_huffman);
     }
 
     if (root->right) {
-        arr[top] = 1;
-        printHCodes(root->right, arr, top + 1);
+        arr[top] = '1';
+        printHCodes(root->right, arr, top + 1, dict_huffman);
     }
 
     if (isLeaf(root)) {
-        printf("  %s   | ", root->item);
-        printArray(arr, top);
+        arr[top] = '\0';
+        dict_string_add(dict_huffman, root->item, arr);
     }
 }
 
 // Wrapper function
-void HuffmanCodes(char item[][SIZE_CHAR], int freq[], int size) {
+dict_string_t HuffmanCodes(char item[][SIZE_CHAR], int freq[], int size) {
+    dict_string_t dict_huffman;
     struct MinHNode *root = buildHuffmanTree(item, freq, size);
 
-    int arr[MAX_TREE_HT], top = 0;
+    dict_huffman = dict_string_new();
+    char arr[MAX_TREE_HT], top = 0;
 
-    printHCodes(root, arr, top);
+    printHCodes(root, arr, top, dict_huffman);
+
+    return dict_huffman;
 }

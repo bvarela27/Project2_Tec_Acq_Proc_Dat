@@ -1,6 +1,8 @@
 #ifndef HUFFMAN_H
 #define HUFFMAN_H
 
+#include "dictionary.h"
+
 ///////////////////////////////////////////////////////////
 // Defines
 #define MAX_TREE_HT 512
@@ -22,7 +24,6 @@ struct MinHeap {
 
 ///////////////////////////////////////////////////////////
 // Functions
-void printArray(int arr[], int n);
 struct MinHNode *newNode(char item[SIZE_CHAR], unsigned freq);
 struct MinHeap *createMinH(unsigned capacity);
 void swapMinHNode(struct MinHNode **a, struct MinHNode **b);
@@ -34,7 +35,7 @@ void buildMinHeap(struct MinHeap *minHeap);
 int isLeaf(struct MinHNode *root);
 struct MinHeap *createAndBuildMinHeap(char item[][SIZE_CHAR], int freq[], int size);
 struct MinHNode *buildHuffmanTree(char item[][SIZE_CHAR], int freq[], int size);
-void printHCodes(struct MinHNode *root, int arr[], int top);
-void HuffmanCodes(char item[][SIZE_CHAR], int freq[], int size);
+void printHCodes(struct MinHNode *root, char arr[], int top, dict_string_t dict_huffman);
+dict_string_t HuffmanCodes(char item[][SIZE_CHAR], int freq[], int size);
 
 #endif

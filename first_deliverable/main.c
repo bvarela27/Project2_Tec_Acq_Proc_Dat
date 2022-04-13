@@ -32,13 +32,14 @@ static void print_vector( const char *title, complex *x, int n) {
 int main(void) {
     int i, count;
     char key[SIZE_CHAR];
-    dict_t dict_coeffs;
+    dict_int_t dict_coeffs;
+    dict_string_t dict_huffman;
     list_t list_coeffs;
     FILE* ptr;
     FILE* ptr_w;
     complex block[N], scratch[N];
 
-    dict_coeffs = dict_new();
+    dict_coeffs = dict_int_new();
     list_coeffs = list_new();
 
     count = 0;
@@ -55,8 +56,8 @@ int main(void) {
         quantify_coeff(block, N);
 
         for(i=0; i<N; i++) {
-            dict_add(dict_coeffs, block[i].Re, 1);
-            dict_add(dict_coeffs, block[i].Im, 1);
+            dict_int_add(dict_coeffs, block[i].Re, 1);
+            dict_int_add(dict_coeffs, block[i].Im, 1);
 
             list_add(list_coeffs, block[i].Re, block[i].Im);
         }
@@ -89,10 +90,9 @@ int main(void) {
         freqs[i] = dict_coeffs->entry[i].value;
     }
 
-
     printf("len_list: %d\n", list_coeffs->len);
 
-    dict_free(dict_coeffs);
+    dict_int_free(dict_coeffs);
     list_free(list_coeffs);
 
     //char arr[][SIZE_CHAR] = {"11", "4", "-18", "102", "5", "256", "120", "6", "44", "-240"};
@@ -103,7 +103,11 @@ int main(void) {
     printf(" Char | Huffman code ");
     printf("\n--------------------\n");
 
-    HuffmanCodes(keys, freqs, size);
+    dict_huffman = HuffmanCodes(keys, freqs, size);
+
+    for (i=0; i<dict_huffman->len; i++) {
+        printf("key: %s, value: %s\n", dict_huffman->entry[i].key, dict_huffman->entry[i].value);
+    }
 
     //printf("max_real: %f, min_real: %f, max_im: %f, min_im: %f\n", max_real, min_real, max_im, min_im);
 
