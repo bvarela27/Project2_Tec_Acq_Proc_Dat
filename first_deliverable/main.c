@@ -31,13 +31,15 @@ static void print_vector( const char *title, complex *x, int n) {
 
 int main(void) {
     int i, count;
-    char key[6];
+    char key[SIZE_CHAR];
     dict_t dict_coeffs;
+    list_t list_coeffs;
     FILE* ptr;
     FILE* ptr_w;
     complex block[N], scratch[N];
 
     dict_coeffs = dict_new();
+    list_coeffs = list_new();
 
     count = 0;
     max_real, min_real, max_im, min_im = 0, 0, 0, 0;
@@ -53,10 +55,10 @@ int main(void) {
         quantify_coeff(block, N);
 
         for(i=0; i<N; i++) {
-            sprintf(key, "%d", (int) block[i].Re);
-            dict_add(dict_coeffs, key, 1);
-            sprintf(key, "%d", (int) block[i].Im);
-            dict_add(dict_coeffs, key, 1);
+            dict_add(dict_coeffs, block[i].Re, 1);
+            dict_add(dict_coeffs, block[i].Im, 1);
+
+            list_add(list_coeffs, block[i].Re, block[i].Im);
         }
 
         dequantify_coeff(block, N);
@@ -70,9 +72,9 @@ int main(void) {
 
     fclose(ptr_w);
 
-    printf("len: %d\n", dict_coeffs->len);
+    printf("len_dict: %d\n", dict_coeffs->len);
 
-    char keys[dict_coeffs->len][5];
+    char keys[dict_coeffs->len][SIZE_CHAR];
     int* freqs = calloc(dict_coeffs->len, sizeof(int));
 
     if (keys == NULL || freqs == NULL) {
@@ -81,20 +83,22 @@ int main(void) {
     }
 
     for (i=0; i<dict_coeffs->len; i++) {
-        //printf("key: %s, value: %d\n", dict_coeffs->entry[i].key, dict_coeffs->entry[i].value);
-        strcpy(keys[i], dict_coeffs->entry[i].key);
+        //printf("key: %d, value: %d\n", dict_coeffs->entry[i].key, dict_coeffs->entry[i].value);
+        sprintf(key, "%d", (int) dict_coeffs->entry[i].key);
+        strcpy(keys[i], key);
         freqs[i] = dict_coeffs->entry[i].value;
     }
 
+
+    printf("len_list: %d\n", list_coeffs->len);
+
     dict_free(dict_coeffs);
+    list_free(list_coeffs);
 
     //char arr[][SIZE_CHAR] = {"11", "4", "-18", "102", "5", "256", "120", "6", "44", "-240"};
     //int freq[] =            {5,    1,   6,     3,     10,  11,    1,     1,   1,     10};
-    //int size = sizeof(arr) / sizeof(arr[0]);
 
     int size = sizeof(keys) / sizeof(keys[0]);
-
-    printf("%d\n", size);
 
     printf(" Char | Huffman code ");
     printf("\n--------------------\n");
