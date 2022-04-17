@@ -38,6 +38,20 @@ int get_block_from_samples(FILE* ptr, complex* block, int block_size) {
     return 0;
 }
 
+int get_code_from_encoder(FILE* ptr, char* code) {
+    char ch[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE*2];
+
+    if (fgets(ch, sizeof(ch), ptr) != NULL) {
+        strcpy(code, strtok(ch,"\n"));
+    } else {
+        // Close the file when the whole file was read
+        fclose(ptr);
+        return 1;
+    }
+
+    return 0;
+}
+
 real normalize_sample(real sample) {
     real normal_sample;
 

@@ -41,7 +41,7 @@ void dict_int_free(dict_int_t dict) {
 }
 
 // Dictionary string
-int dict_string_find_index(dict_string_t dict, const char *key) {
+int dict_string_find_index_from_key(dict_string_t dict, const char *key) {
     for (int i = 0; i < dict->len; i++) {
         if (!strcmp(dict->entry[i].key, key)) {
             return i;
@@ -50,8 +50,17 @@ int dict_string_find_index(dict_string_t dict, const char *key) {
     return -1;
 }
 
+int dict_string_find_index_from_value(dict_string_t dict, const char *value) {
+    for (int i = 0; i < dict->len; i++) {
+        if (!strcmp(dict->entry[i].value, value)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void dict_string_add(dict_string_t dict, const char *key, const char *value) {
-   int idx = dict_string_find_index(dict, key);
+   int idx = dict_string_find_index_from_key(dict, key);
    if (idx != -1) {
        dict->entry[idx].value = strdup(value);
        return;

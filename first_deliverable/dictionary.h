@@ -43,7 +43,8 @@ void dict_int_add(dict_int_t dict, int key, int value);
 dict_int_t dict_int_new(void);
 void dict_int_free(dict_int_t dict);
 
-int dict_string_find_index(dict_string_t dict, const char *key);
+int dict_string_find_index_from_key(dict_string_t dict, const char *key);
+int dict_string_find_index_from_value(dict_string_t dict, const char *value);
 void dict_string_add(dict_string_t dict, const char *key, const char *value);
 dict_string_t dict_string_new(void);
 void dict_string_free(dict_string_t dict);
