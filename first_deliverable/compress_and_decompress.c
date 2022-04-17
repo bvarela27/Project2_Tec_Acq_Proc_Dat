@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 
 void quantify_coeff(complex* coeffs, int num_elements) {
@@ -42,6 +43,13 @@ void dequantify_coeff(complex* coeffs, int num_elements) {
         // Imaginary part
         coeffs[i].Im =  coeffs[i].Im * ((real) COEFF_QUANT_STEP);
     }
+
+    return;
+}
+
+void concatenate_huffman_codes_bit(char* dest, const char* code_Re, const char* code_Im) {
+    strcat(dest, code_Re);
+    strcat(dest, code_Im);
 
     return;
 }

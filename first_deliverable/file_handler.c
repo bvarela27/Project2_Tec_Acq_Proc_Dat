@@ -4,12 +4,12 @@
 #include <string.h>
 
 
-FILE* get_file_pointer(char* file_name) {
+FILE* get_file_pointer(char* file_name, char* mode) {
 
     FILE* ptr;
 
     // Open file in reading mode
-    ptr = fopen(file_name, "r");
+    ptr = fopen(file_name, mode);
 
     // Make sure the file was opened successfully
     if (NULL == ptr) {
@@ -20,11 +20,11 @@ FILE* get_file_pointer(char* file_name) {
     return ptr;
 }
 
-int get_block_from_samples(FILE* ptr, complex* block, __int8_t BLOCK_SIZE) {
+int get_block_from_samples(FILE* ptr, complex* block, int block_size) {
     char ch[10];
     int count;
 
-    for (count = 0; count<BLOCK_SIZE; count++) {
+    for (count = 0; count<block_size; count++) {
         if (fgets(ch, sizeof(ch), ptr) != NULL) {
             block[count].Re = normalize_sample(atoi(strtok(ch,"\n")));
             block[count].Im = 0;

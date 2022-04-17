@@ -11,6 +11,8 @@
 
 #define NUM_BITS_SAMPLE         16
 
+#define BLOCK_SIZE              64
+
 #define COEFF_QUANT_BITS        8
 #define COEFF_QUANT_THRESH      700
 #define COEFF_QUANT_STEP        COEFF_QUANT_THRESH / (1<<COEFF_QUANT_BITS)
