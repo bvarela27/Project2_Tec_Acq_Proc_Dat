@@ -39,7 +39,7 @@ int get_block_from_samples(FILE* ptr, complex* block, int block_size) {
 }
 
 int get_code_from_encoder(FILE* ptr, char* code) {
-    char ch[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE*2];
+    char ch[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE_OPT*2];
 
     if (fgets(ch, sizeof(ch), ptr) != NULL) {
         strcpy(code, strtok(ch,"\n"));

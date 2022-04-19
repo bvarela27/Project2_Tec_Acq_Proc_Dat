@@ -9,4 +9,7 @@ void fft( complex *v, int n, complex *tmp );
 void ifft( complex *v, int n, complex *tmp );
 void _ifft( complex *v, int n, complex *tmp );
 
+void rfft( complex *v, int n, complex *tmp );
+void irfft( complex *v, int n, complex *tmp );
+
 #endif
