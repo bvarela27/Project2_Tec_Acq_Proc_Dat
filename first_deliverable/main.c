@@ -58,7 +58,8 @@ int main(void) {
     dict_huffman = HuffmanCodes(keys, freqs, size);
 
     int idx_Re, idx_Im;
-    char code_block_bit[20*BLOCK_SIZE_OPT*2] = "";
+    char code_block_bin[20*BLOCK_SIZE_OPT*2] = "";
+    char code_block_hex[20*BLOCK_SIZE_OPT*2] = "";
 
     // Concatenate codes
     for (i=0; i<list_coeffs->len; i++) {
@@ -70,14 +71,16 @@ int main(void) {
         sprintf(key, "%d", (int) list_coeffs->entry[i].Im);
         idx_Im = dict_string_find_index_from_key(dict_huffman, key);
 
-        concatenate_huffman_codes_bit(code_block_bit, dict_huffman->entry[idx_Re].value, dict_huffman->entry[idx_Im].value);
+        concatenate_huffman_codes_bit(code_block_bin, dict_huffman->entry[idx_Re].value, dict_huffman->entry[idx_Im].value);
 
         // When BLOCK_SIZE_OPT number of codes have been concatenated the code
         // should write that string into a file and restart the process again
         if (((i+1) % BLOCK_SIZE_OPT) == 0) {
             // Store string
-            fprintf(ptr_w, "%s\n", code_block_bit);
-            strcpy(code_block_bit, "");
+            string_bin_to_hex(code_block_hex, code_block_bin);
+            fprintf(ptr_w, "%s\n", code_block_hex);
+            strcpy(code_block_bin, "");
+            strcpy(code_block_hex, "");
         }
     }
 
@@ -90,23 +93,26 @@ int main(void) {
     int start, len, idx, num_codes_received;
 
     // Opening files
-    char code_encoder[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE_OPT*2];
+    char code_encoder_hex[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE_OPT*2] = "";
+    char code_encoder_bin[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE_OPT*2] = "";
     char single_code[MAX_SINGLE_CODE_SIZE];
 
     ptr_r = get_file_pointer("encoder.txt", "r");
     ptr_w = get_file_pointer("samples_get.txt", "w");
 
-    while(get_code_from_encoder(ptr_r, code_encoder) == 0) {
+    while(get_code_from_encoder(ptr_r, code_encoder_hex) == 0) {
         //printf("code: %s, len: %ld\n", code_encoder, strlen(code_encoder));
+
+        string_hex_to_bin(code_encoder_hex, code_encoder_bin);
 
         start = 0;
         len   = 1;
         num_codes_received = 0;
 
         // Get single codes from whole code
-        for (i=0; i<strlen(code_encoder); i++) {
+        for (i=0; i<strlen(code_encoder_bin); i++) {
 
-            substring(code_encoder, single_code, start, len);
+            substring(code_encoder_bin, single_code, start, len);
             //printf("i: %d, single_code: %s, start: %d, len: %d\n", i, single_code, start, len);
             idx = dict_string_find_index_from_value(dict_huffman, single_code);
 
@@ -142,11 +148,10 @@ int main(void) {
 
         dequantify_coeff(block, BLOCK_SIZE_OPT);
         irfft( block, N, scratch );
+        set_samples_from_block(ptr_w, block, N);
 
-        for(i=0; i<N; i++) {
-            block[i].Re = denormalize_sample(block[i].Re);
-            fprintf(ptr_w, "%d\n", (int)block[i].Re);
-        }
+        strcpy(code_encoder_bin, "");
+        strcpy(code_encoder_hex, "");
     }
 
     //dict_string_free(dict_huffman);

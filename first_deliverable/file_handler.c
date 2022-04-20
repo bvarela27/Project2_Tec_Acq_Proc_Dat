@@ -52,6 +52,17 @@ int get_code_from_encoder(FILE* ptr, char* code) {
     return 0;
 }
 
+void set_samples_from_block(FILE* ptr, complex* block, int block_size) {
+    int i;
+
+    for(i=0; i<block_size; i++) {
+        block[i].Re = denormalize_sample(block[i].Re);
+        fprintf(ptr, "%d\n", (int)block[i].Re);
+    }
+
+    return;
+}
+
 real normalize_sample(real sample) {
     real normal_sample;
 

@@ -9,6 +9,8 @@
     #define PI	                3.14159265358979323846264338327950288
 #endif
 
+#define NUM_BITS_IN_BYTE        8
+
 #define NUM_BITS_SAMPLE         16
 
 #define BLOCK_SIZE              64
@@ -31,5 +33,8 @@ typedef struct {
 ///////////////////////////////////////////////////////////
 // Functions
 void substring(char* s, char* sub, int start, int len);
+void string_bin_to_hex(char* code_block_hex, char* code_block_bin);
+void string_hex_to_bin(char* code_block_hex, char* code_block_bin);
+void decToBinary(int n, char* binaryNum);
 
 #endif
