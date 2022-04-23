@@ -15,7 +15,7 @@
 
 #define BLOCK_SIZE              64
 #define BLOCK_SIZE_OPT          33
-#define MAX_SINGLE_CODE_SIZE    20
+#define MAX_SINGLE_CODE_SIZE    30
 
 #define COEFF_QUANT_BITS        8
 #define COEFF_QUANT_THRESH      700
