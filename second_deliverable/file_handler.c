@@ -26,7 +26,7 @@ int get_block_from_samples(FILE* ptr, complex* block, int block_size) {
 
     for (count = 0; count<block_size; count++) {
         if (fgets(ch, sizeof(ch), ptr) != NULL) {
-            block[count].Re = normalize_sample(atoi(strtok(ch,"\n")));
+            block[count].Re = scale_sample(atoi(strtok(ch,"\n")));
             block[count].Im = 0;
         } else {
             // Close the file when the whole file was read
@@ -56,25 +56,25 @@ void set_samples_from_block(FILE* ptr, complex* block, int block_size) {
     int i;
 
     for(i=0; i<block_size; i++) {
-        block[i].Re = denormalize_sample(block[i].Re);
+        block[i].Re = descale_sample(block[i].Re);
         fprintf(ptr, "%d\n", (int)block[i].Re);
     }
 
     return;
 }
 
-real normalize_sample(real sample) {
-    real normal_sample;
-
-    normal_sample = sample / ((real) N*NUM_BITS_SAMPLE);
-
-    return normal_sample;
-}
-
-real denormalize_sample(real sample) {
+real scale_sample(real sample) {
     real denormal_sample;
 
-    denormal_sample = sample * ((real) N*NUM_BITS_SAMPLE);
+    denormal_sample = sample * FACTOR;
+
+    return denormal_sample;
+}
+
+real descale_sample(real sample) {
+    real denormal_sample;
+
+    denormal_sample = sample >> Qb;
 
     return denormal_sample;
 }

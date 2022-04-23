@@ -15,15 +15,20 @@
 
 #define BLOCK_SIZE              64
 #define BLOCK_SIZE_OPT          33
-#define MAX_SINGLE_CODE_SIZE    20
+#define MAX_SINGLE_CODE_SIZE    30
+
+#define Qb                      14
+#define FACTOR                  (1<<Qb)
 
 #define COEFF_QUANT_BITS        8
-#define COEFF_QUANT_THRESH      700
+#define COEFF_QUANT_THRESH      700000
 #define COEFF_QUANT_STEP        COEFF_QUANT_THRESH / (1<<COEFF_QUANT_BITS)
+
+#include <stdlib.h>
 
 ///////////////////////////////////////////////////////////
 // Structs
-typedef double real;
+typedef __int64_t real;
 
 typedef struct {
     real Re;

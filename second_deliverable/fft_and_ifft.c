@@ -17,10 +17,10 @@ void rfft( complex *v, int n, complex *tmp ) {
         fft( ve, n/2, v );		/* FFT on even-indexed elements of v[] */
         fft( vo, n/2, v );		/* FFT on odd-indexed elements of v[] */
         for(m=0; m<n/2; m++) {
-            w.Re = cos(2*PI*m/(double)n);
-            w.Im = -sin(2*PI*m/(double)n);
-            z.Re = w.Re*vo[m].Re - w.Im*vo[m].Im;	/* Re(w*vo[m]) */
-            z.Im = w.Re*vo[m].Im + w.Im*vo[m].Re;	/* Im(w*vo[m]) */
+            w.Re = (real) (cos(2*PI*m/(double)n) * (double) FACTOR);
+            w.Im = (real) (-sin(2*PI*m/(double)n) * (double) FACTOR);
+            z.Re = (w.Re*vo[m].Re - w.Im*vo[m].Im) >> Qb;	/* Re(w*vo[m]) */
+            z.Im = (w.Re*vo[m].Im + w.Im*vo[m].Re) >> Qb;	/* Im(w*vo[m]) */
             v[  m  ].Re = ve[m].Re + z.Re;
             v[  m  ].Im = ve[m].Im + z.Im;
         }
@@ -43,10 +43,10 @@ void fft( complex *v, int n, complex *tmp ) {
         fft( ve, n/2, v );		/* FFT on even-indexed elements of v[] */
         fft( vo, n/2, v );		/* FFT on odd-indexed elements of v[] */
         for(m=0; m<n/2; m++) {
-            w.Re = cos(2*PI*m/(double)n);
-            w.Im = -sin(2*PI*m/(double)n);
-            z.Re = w.Re*vo[m].Re - w.Im*vo[m].Im;	/* Re(w*vo[m]) */
-            z.Im = w.Re*vo[m].Im + w.Im*vo[m].Re;	/* Im(w*vo[m]) */
+            w.Re = (real) (cos(2*PI*m/(double)n) * (double) FACTOR);
+            w.Im = (real) (-sin(2*PI*m/(double)n) * (double) FACTOR);
+            z.Re = (w.Re*vo[m].Re - w.Im*vo[m].Im) >> Qb;	/* Re(w*vo[m]) */
+            z.Im = (w.Re*vo[m].Im + w.Im*vo[m].Re) >> Qb;	/* Im(w*vo[m]) */
             v[  m  ].Re = ve[m].Re + z.Re;
             v[  m  ].Im = ve[m].Im + z.Im;
             v[m+n/2].Re = ve[m].Re - z.Re;
@@ -70,10 +70,10 @@ void _ifft( complex *v, int n, complex *tmp ) {
         _ifft( ve, n/2, v );		/* FFT on even-indexed elements of v[] */
         _ifft( vo, n/2, v );		/* FFT on odd-indexed elements of v[] */
         for(m=0; m<n/2; m++) {
-            w.Re = cos(2*PI*m/(double)n);
-            w.Im = sin(2*PI*m/(double)n);
-            z.Re = w.Re*vo[m].Re - w.Im*vo[m].Im;	/* Re(w*vo[m]) */
-            z.Im = w.Re*vo[m].Im + w.Im*vo[m].Re;	/* Im(w*vo[m]) */
+            w.Re = (real) (cos(2*PI*m/(double)n) *(double) FACTOR);
+            w.Im = (real) (sin(2*PI*m/(double)n) *(double) FACTOR);
+            z.Re = (w.Re*vo[m].Re - w.Im*vo[m].Im) >> Qb;	/* Re(w*vo[m]) */
+            z.Im = (w.Re*vo[m].Im + w.Im*vo[m].Re) >> Qb;	/* Im(w*vo[m]) */
             v[  m  ].Re = ve[m].Re + z.Re;
             v[  m  ].Im = ve[m].Im + z.Im;
             v[m+n/2].Re = ve[m].Re - z.Re;

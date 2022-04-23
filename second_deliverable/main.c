@@ -30,6 +30,7 @@ int main(void) {
     ptr_w = get_file_pointer("encoder.txt", "w");
 
     while(get_block_from_samples(ptr_r, block, BLOCK_SIZE) == 0) {
+
         rfft( block, N, scratch );
         quantify_coeff(block, BLOCK_SIZE_OPT);
 
