@@ -20,8 +20,8 @@
 #define Qb                      14
 #define FACTOR                  (1<<Qb)
 
-#define COEFF_QUANT_BITS        8
-#define COEFF_QUANT_THRESH      700000
+#define COEFF_QUANT_BITS        9
+#define COEFF_QUANT_THRESH      680000
 #define COEFF_QUANT_STEP        COEFF_QUANT_THRESH / (1<<COEFF_QUANT_BITS)
 
 #include <stdlib.h>
