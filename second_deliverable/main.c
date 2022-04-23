@@ -7,11 +7,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 
 int main(void) {
     ////////////////////////////////////////////////////////////////
     // Encoder
+
+    clock_t start_time, end_time;
+    double encoder_time, decoder_time;
+
+    start_time = clock();
 
     int i, j;
     char key[SIZE_CHAR];
@@ -89,8 +95,17 @@ int main(void) {
     //dict_string_free(dict_huffman);
     fclose(ptr_w);
 
+    end_time = clock();
+
+    encoder_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+
+    printf("Encoder time: %fs\n", encoder_time);
+
     ////////////////////////////////////////////////////////////////
     // Decoder
+
+    start_time = clock();
+
     int start, len, idx, num_codes_received;
 
     // Opening files
@@ -157,6 +172,12 @@ int main(void) {
 
     //dict_string_free(dict_huffman);
     fclose(ptr_w);
+
+    end_time = clock();
+
+    decoder_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+
+    printf("Decoder time: %fs\n", decoder_time);
 
     exit(EXIT_SUCCESS);
 }
