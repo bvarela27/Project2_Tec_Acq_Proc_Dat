@@ -21,7 +21,7 @@ void quantify_coeff(complex* coeffs, int num_elements) {
         } else if (coeffs[i].Re <= -(real) COEFF_QUANT_THRESH) {    // MIN value
             coeffs[i].Re = -(real) (1 << COEFF_QUANT_BITS);
         } else {                                                    // Middle value
-            coeffs[i].Re =  round(coeffs[i].Re / ((real) COEFF_QUANT_STEP));
+            coeffs[i].Re =  round(((double) coeffs[i].Re) / ((double) COEFF_QUANT_STEP));
         }
 
         // Imaginary part
@@ -30,7 +30,7 @@ void quantify_coeff(complex* coeffs, int num_elements) {
         } else if (coeffs[i].Im <= -(real )COEFF_QUANT_THRESH) {    // MIN value
             coeffs[i].Im = -(real) (1 << COEFF_QUANT_BITS);
         } else {                                                    // Middle value
-            coeffs[i].Im =  round(coeffs[i].Im / ((real) COEFF_QUANT_STEP));
+            coeffs[i].Im =  round(((double) coeffs[i].Im) / ((double) COEFF_QUANT_STEP));
         }
     }
 
@@ -43,14 +43,10 @@ void dequantify_coeff(complex* coeffs, int num_elements) {
 
     for (i=0; i<num_elements; i++) {
         // Real part
-        coeffs[i].Re =  coeffs[i].Re * ((real) COEFF_QUANT_STEP);
+        coeffs[i].Re = (real) (((double) coeffs[i].Re) * ((double) COEFF_QUANT_STEP) * ((double) FACTOR));
 
         // Imaginary part
-        coeffs[i].Im =  coeffs[i].Im * ((real) COEFF_QUANT_STEP);
-
-        // Scale
-        coeffs[i].Re = coeffs[i].Re * FACTOR;
-        coeffs[i].Im = coeffs[i].Im * FACTOR;
+        coeffs[i].Im = (real) (((double) coeffs[i].Im) * ((double) COEFF_QUANT_STEP) * ((double) FACTOR));
     }
 
     return;

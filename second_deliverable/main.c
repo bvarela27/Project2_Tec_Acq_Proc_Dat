@@ -33,7 +33,7 @@ int main(void) {
 
     // Opening files
     ptr_r = get_file_pointer("samples.txt", "r");
-    ptr_w = get_file_pointer("encoder.txt", "w");
+    ptr_w = get_file_pointer("encoder_output.txt", "w");
 
     while(get_block_from_samples(ptr_r, block, BLOCK_SIZE) == 0) {
 
@@ -113,11 +113,10 @@ int main(void) {
     char code_encoder_bin[MAX_SINGLE_CODE_SIZE*BLOCK_SIZE_OPT*2] = "";
     char single_code[MAX_SINGLE_CODE_SIZE];
 
-    ptr_r = get_file_pointer("encoder.txt", "r");
-    ptr_w = get_file_pointer("samples_get.txt", "w");
+    ptr_r = get_file_pointer("encoder_output.txt", "r");
+    ptr_w = get_file_pointer("decoder_output.txt", "w");
 
     while(get_code_from_encoder(ptr_r, code_encoder_hex) == 0) {
-        //printf("code: %s, len: %ld\n", code_encoder, strlen(code_encoder));
 
         string_hex_to_bin(code_encoder_hex, code_encoder_bin);
 
