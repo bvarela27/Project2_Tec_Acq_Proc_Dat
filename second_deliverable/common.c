@@ -14,6 +14,15 @@ void substring(char* s, char* sub, int start, int len) {
     sub[counter] = '\0';
 }
 
+int string_get_idx(char* string, char c) {
+    char *e = strchr(string, c);
+    if (e == NULL) {
+        return -1;
+    }
+
+    return (int)(e - string);
+}
+
 void string_bin_to_hex(char* code_block_hex, char* code_block_bin) {
     int i, num_bits_pad;
     char ch[20*BLOCK_SIZE_OPT*2] = "";
