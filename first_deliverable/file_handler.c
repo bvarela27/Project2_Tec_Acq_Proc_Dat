@@ -1,4 +1,5 @@
 #include "file_handler.h"
+#include "dictionary.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,6 +62,35 @@ void set_samples_from_block(FILE* ptr, complex* block, int block_size) {
     }
 
     return;
+}
+
+void store_huffman_codes(FILE* ptr, dict_string_t dict_huffman) {
+    int i;
+
+    for (i=0; i<dict_huffman->len; i++) {
+        fprintf(ptr, "%s,%s\n", dict_huffman->entry[i].key, dict_huffman->entry[i].value);
+    }
+
+    fclose(ptr);
+}
+
+dict_string_t get_huffman_dict_from_file(FILE* ptr) {
+    int idx;
+    dict_string_t dict_huffman;
+    char ch[MAX_SINGLE_CODE_SIZE*2];
+    char key[MAX_SINGLE_CODE_SIZE*2];
+    char value[MAX_SINGLE_CODE_SIZE*2];
+
+    dict_huffman = dict_string_new();
+
+    while(get_code_from_encoder(ptr, ch) == 0) {
+        idx = string_get_idx(ch, ',');
+        substring(ch, key, 0, idx);
+        substring(ch, value, idx+1, strlen(ch)-(idx+1));
+        dict_string_add(dict_huffman, key, value);
+    }
+
+    return dict_huffman;
 }
 
 real normalize_sample(real sample) {

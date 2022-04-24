@@ -81,6 +81,11 @@ dict_string_t dict_string_new(void) {
     return d;
 }
 
+void dict_string_free(dict_string_t dict) {
+    free(dict->entry);
+    free(dict);
+}
+
 // List
 void list_add(list_t list, int Re, int Im) {
    if (list->len == list->cap) {

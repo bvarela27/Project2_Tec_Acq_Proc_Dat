@@ -33,6 +33,7 @@ typedef struct {
 ///////////////////////////////////////////////////////////
 // Functions
 void substring(char* s, char* sub, int start, int len);
+int string_get_idx(char* string, char c);
 void string_bin_to_hex(char* code_block_hex, char* code_block_bin);
 void string_hex_to_bin(char* code_block_hex, char* code_block_bin);
 void decToBinary(int n, char* binaryNum);
