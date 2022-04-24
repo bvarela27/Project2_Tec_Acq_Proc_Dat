@@ -18,7 +18,7 @@
 #define MAX_SINGLE_CODE_SIZE    30
 
 #define COEFF_QUANT_BITS        8
-#define COEFF_QUANT_THRESH      700
+#define COEFF_QUANT_THRESH      680
 #define COEFF_QUANT_STEP        COEFF_QUANT_THRESH / (1<<COEFF_QUANT_BITS)
 
 ///////////////////////////////////////////////////////////
