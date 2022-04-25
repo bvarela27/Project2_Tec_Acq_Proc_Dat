@@ -3,6 +3,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <arm_neon.h>
+
+
+int64x2_t from_complex_2_vec (complex input)
+{
+	int64x2_t output;
+	output[0] = input.Re;
+	output[1] = input.Im;
+
+	return output;
+}
+
+complex from_vec_2_complex (int64x2_t input)
+{
+	complex output;
+	output.Re = (real) input[0];
+	output.Im = (real) input[1];
+
+	return output;
+}
+
 
 void rfft( complex *v, int n, complex *tmp ) {
     if(n>1) {			/* otherwise, do nothing and return */
@@ -21,8 +42,14 @@ void rfft( complex *v, int n, complex *tmp ) {
             w.Im = (real) (-sin(2*PI*m/(double)n) * (double) FACTOR);
             z.Re = (w.Re*vo[m].Re - w.Im*vo[m].Im) >> Qb;	/* Re(w*vo[m]) */
             z.Im = (w.Re*vo[m].Im + w.Im*vo[m].Re) >> Qb;	/* Im(w*vo[m]) */
-            v[  m  ].Re = ve[m].Re + z.Re;
-            v[  m  ].Im = ve[m].Im + z.Im;
+
+//            v[  m  ].Re = ve[m].Re + z.Re;
+//            v[  m  ].Im = ve[m].Im + z.Im;
+
+            v[ m ] = from_vec_2_complex(vaddq_s64 (from_complex_2_vec(ve[m]),
+            			from_complex_2_vec(z)));
+
+
         }
         v[32].Re = ve[0].Re - vo[0].Re;
     }
@@ -47,10 +74,14 @@ void fft( complex *v, int n, complex *tmp ) {
             w.Im = (real) (-sin(2*PI*m/(double)n) * (double) FACTOR);
             z.Re = (w.Re*vo[m].Re - w.Im*vo[m].Im) >> Qb;	/* Re(w*vo[m]) */
             z.Im = (w.Re*vo[m].Im + w.Im*vo[m].Re) >> Qb;	/* Im(w*vo[m]) */
-            v[  m  ].Re = ve[m].Re + z.Re;
-            v[  m  ].Im = ve[m].Im + z.Im;
-            v[m+n/2].Re = ve[m].Re - z.Re;
-            v[m+n/2].Im = ve[m].Im - z.Im;
+//            v[  m  ].Re = ve[m].Re + z.Re;
+//            v[  m  ].Im = ve[m].Im + z.Im;
+            v[ m ] = from_vec_2_complex(vaddq_s64 (from_complex_2_vec(ve[m]),
+                        from_complex_2_vec(z)));
+//            v[m+n/2].Re = ve[m].Re - z.Re;
+//            v[m+n/2].Im = ve[m].Im - z.Im;
+            v[m+n/2] = from_vec_2_complex(vsubq_s64 (from_complex_2_vec(ve[m]),
+                        from_complex_2_vec(z)));
         }
     }
 
@@ -74,10 +105,14 @@ void _ifft( complex *v, int n, complex *tmp ) {
             w.Im = (real) (sin(2*PI*m/(double)n) *(double) FACTOR);
             z.Re = (w.Re*vo[m].Re - w.Im*vo[m].Im) >> Qb;	/* Re(w*vo[m]) */
             z.Im = (w.Re*vo[m].Im + w.Im*vo[m].Re) >> Qb;	/* Im(w*vo[m]) */
-            v[  m  ].Re = ve[m].Re + z.Re;
-            v[  m  ].Im = ve[m].Im + z.Im;
-            v[m+n/2].Re = ve[m].Re - z.Re;
-            v[m+n/2].Im = ve[m].Im - z.Im;
+//            v[  m  ].Re = ve[m].Re + z.Re;
+//            v[  m  ].Im = ve[m].Im + z.Im;
+            v[ m ] = from_vec_2_complex(vaddq_s64 (from_complex_2_vec(ve[m]),
+                        from_complex_2_vec(z)));
+//            v[m+n/2].Re = ve[m].Re - z.Re;
+//            v[m+n/2].Im = ve[m].Im - z.Im;
+            v[m+n/2] = from_vec_2_complex(vsubq_s64 (from_complex_2_vec(ve[m]),
+                        from_complex_2_vec(z)));
         }
     }
     return;
